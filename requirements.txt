@@ -6,5 +6,4 @@ pygame>=2.5.0
 pyinstaller
 fastapi
 uvicorn
-pymupdf
 python-multipart

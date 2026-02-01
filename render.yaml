@@ -1,0 +1,6 @@
+services:
+  - type: web
+    name: furijapan-app
+    env: python
+    buildCommand: pip install -r requirements.txt
+    startCommand: gunicorn -w 4 -k uvicorn.workers.UvicornWorker server:app --bind 0.0.0.0:$PORT
