@@ -7,3 +7,5 @@ pyinstaller
 fastapi
 uvicorn
 python-multipart
+Pillow
+gunicorn
