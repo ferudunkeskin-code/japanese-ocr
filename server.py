@@ -98,9 +98,19 @@ def home():
 <html>
 <head>
 <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
 <title>FuriJapan OCR</title>
 <style>
-    body { font-family:'Segoe UI', sans-serif; margin:0; background:#f0f2f5; }
+    body { 
+    font-family:'Segoe UI', sans-serif; 
+    margin:0; 
+    background:#f0f2f5; 
+    /* EKLEMEN GEREKENLER: */
+    word-wrap: break-word; 
+    overflow-wrap: break-word;
+    line-height: 1.6;
+    }
     .header { background:#2c3e50; color:white; padding:15px; text-align:center; font-size:20px; }
     .container { max-width: 800px; margin: 20px auto; padding:20px; background:white; border-radius:8px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
     .upload-section { 
@@ -961,7 +971,44 @@ function downloadFurigana() {
     let baseName = currentFileName || 'furigana_metni';
     let fileName = generateFileName(baseName, '_furigana.html');
     
-    const blob = new Blob([furiganaResult], { type: 'text/html;charset=utf-8' });
+    // --- YENİ EKLENEN KISIM: HTML ŞABLONU ---
+    // Bu şablon dosyanın telefonda ve bilgisayarda düzgün görünmesini sağlar
+    const tamHtmlİcerigi = `
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>${fileName}</title>
+    <style>
+        body { 
+            font-family: 'Helvetica Neue', Arial, sans-serif; 
+            line-height: 2.8; 
+            padding: 25px; 
+            background-color: #ffffff;
+            color: #333;
+            /* Metnin sağdan taşmasını engelleyen sihirli komutlar: */
+            word-wrap: break-word; 
+            overflow-wrap: break-word;
+            max-width: 900px;
+            margin: 0 auto;
+            font-size: 20px;
+        }
+        ruby { ruby-align: center; }
+        rt { font-size: 0.55em; color: #666; font-weight: normal; }
+    </style>
+</head>
+<body>
+    <div style="border-bottom: 2px solid #eee; margin-bottom: 20px; padding-bottom: 10px; font-size: 14px; color: #999;">
+        FuriJapan OCR Çıktısı - ${new Date().toLocaleString()}
+    </div>
+    ${furiganaResult}
+</body>
+</html>`;
+    // ---------------------------------------
+
+    // Blob oluştururken sadece furiganaResult değil, tamHtmlİcerigi kullanıyoruz
+    const blob = new Blob([tamHtmlİcerigi], { type: 'text/html;charset=utf-8' });
     const url = URL.createObjectURL(blob);
     const a = document.createElement('a');
     a.href = url;
